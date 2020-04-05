@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "745464254789",
+    "firebase_url": "https://mylocalshop-6fb4a.firebaseio.com",
+    "project_id": "mylocalshop-6fb4a",
+    "storage_bucket": "mylocalshop-6fb4a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745464254789:android:6c8798a9cd412ad2846e2c",
+        "android_client_info": {
+          "package_name": "com.mylocalshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "745464254789-abpianqre10gekkot5gn4hkm46ejc9nd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZbSvaU-VemLpvaG4hx_sc7TrAhBviJTU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "745464254789-abpianqre10gekkot5gn4hkm46ejc9nd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">MyLocalShop</string>
+    <string name="name_label">Name</string>
+    <string name="loc_label">Address</string>
+    <string name="tag_label">Tags</string>
+    <string name="price_label">Price</string>
+    <string name="picture_label">Attach a picture</string>
+    <string name="product_name_textview">ProductName</string>
+    <string name="table_name_products">products</string>
+    <string name="invalid_price_error">Price Needs to be a number please</string>
+    <string name="intent_address">address</string>
+    <string name="ok">OK</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
+    <string name="low_storage_error">Ocr dependencies cannot be downloaded due to low device storage</string>
+    <string name="title_activity_main">Ocr Detector Sample</string>
+    <string name="ocr_header">Click &quot;Detect Text&quot; to detect text</string>
+    <string name="read_text">Detect Text</string>
+    <string name="auto_focus">Auto Focus</string>
+    <string name="use_flash">Use Flash</string>
+    <string name="ocr_success">Text read successfully</string>
+    <string name="ocr_failure">No text captured</string>
+    <string name="ocr_error">"Error reading text: %1$s"</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
+    <string name="imgSaveFolderName">products</string>
+    <string name="fetch_address">Fetch address</string>
+    <string name="address_found">Address found</string>
+    <string name="no_address_found">Sorry, no address found</string>
+    <string name="no_location_data_provided">No location data provided</string>
+    <string name="service_not_available">Sorry, the service is not available</string>
+    <string name="intent_extra_loc">loc</string>
+    <string name="invalid_lat_long_used">Invalid latitude or longitude used</string>
+    <string name="progress_downloading">Downloading…</string>
+    <string name="progress_uploading">Uploading…</string>
+    <string name="progress_auth">Signing In…</string>
+    <string name="upload_success">Upload finished</string>
+    <string name="upload_failure">Upload failed</string>
+    <string name="image_file_format">.jpg</string>
+    <string name="day_format">yyyyMMdd_HHmmss</string>
+    <string name="image_file_prefix">PIC</string>
+    <string name="post_button_text">POST</string>
+    <string name="file_uri">file_uri</string>
+    <string name="action_upload">action_upload</string>
+    <string name="upload_completed">upload_completed</string>
+    <string name="upload_error">upload_error</string>
+    <string name="image_file_provider">com.mylocalshop.fileprovider</string>
+    <string name="add_label">+</string>
+    <string name="currency_symbol">$ </string>
+    <string name="adaptor_instance">adaptor_instance</string>
+    <string name="product_id">product_id</string>
+    <string name="permission_rationale">Location permission is needed for core functionality</string>
+    <string name="permission_denied_explanation">Permission was denied, but is needed for core
+        functionality.</string>
+    <string name="settings">Settings</string>
+
+</resources>
