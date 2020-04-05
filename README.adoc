@@ -9,4 +9,4 @@ This is a code of an application "MyLocalShop" which has the following functiona
 
 2. Post Products : There is a camera icon on the search products page which is used to post products. User can click on the camera icon, take picture(s) and then post the product by entering its details such as Product Name, Product Price, Product Location ( By default this is the user 's location in the phone while taking the picture ) and also add tags about the product.
 
-3. Product Favorite : When user clicks on the product deails in the search product page, he/she sees the details and can mark the product as facvorite by a "star" icon on the top
+3. Product Favorite : When user clicks on the product deals in the search product page, he/she sees the details and can mark the product as facorite by a "star" icon on the top
