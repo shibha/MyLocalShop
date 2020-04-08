@@ -1,4 +1,4 @@
-package com.mylocalshop.search.model;
+package com.mylocalshop.search.view.model;
 
 import android.graphics.Bitmap;
 
@@ -29,6 +29,7 @@ public class ProductContent {
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 Product newProduct = dataSnapshot.getValue(Product.class);
                 if(PRODUCT_MAP.get(prevChildKey) == null) {
+                    newProduct.setId(prevChildKey);
                     addItem(convertToViewModel(newProduct, prevChildKey));
                 }
             }
@@ -47,7 +48,8 @@ public class ProductContent {
 
             private ProductItem convertToViewModel(Product product, String prevProductId){
                 ProductItem item = new ProductItem(prevProductId , product.getName() ,
-                        String.valueOf(product.getPrice()), product.getImageUri(), product.getAddress());
+                        String.valueOf(product.getPrice()), product.getImageUri(), product.getAddress(),
+                        product.isFavorite());
                 return item;
 
             }
@@ -59,13 +61,17 @@ public class ProductContent {
 
     public static void addItem(ProductItem item) {
         PRODUCTS.add(item);
+        System.out.println("ADDING TO MAP MALIK WITH ID " + item.id);
+        System.out.println("ADDING TO MAP MALIK WITH ID " + item.name);
+
         PRODUCT_MAP.put(item.id, item);
     }
 
     public static class ProductItem {
-        public final String id;
+        public String id;
         public final String name;
         public final String price;
+        public boolean favorite;
 
         public void setImgBitMap(Bitmap bitMap) {
             this.imgBitMap = bitMap;
@@ -75,12 +81,13 @@ public class ProductContent {
         public final String address;
         public Bitmap imgBitMap = null;
 
-        public ProductItem(String id, String name, String price, String imgUri, String address) {
+        public ProductItem(String id, String name, String price, String imgUri, String address, boolean favorite) {
             this.id = id;
             this.name = name;
             this.price = price;
             this.imgUri = imgUri;
             this.address = address;
+            this.favorite = favorite;
         }
 
 

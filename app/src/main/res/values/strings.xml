@@ -22,7 +22,7 @@
     <string name="ocr_failure">No text captured</string>
     <string name="ocr_error">"Error reading text: %1$s"</string>
     <string name="title_item_list">Items</string>
-    <string name="title_item_detail">Item Detail</string>
+    <string name="title_product_detail">Product Detail</string>
     <string name="imgSaveFolderName">products</string>
     <string name="fetch_address">Fetch address</string>
     <string name="address_found">Address found</string>
@@ -46,6 +46,7 @@
     <string name="upload_error">upload_error</string>
     <string name="image_file_provider">com.mylocalshop.fileprovider</string>
     <string name="add_label">+</string>
+    <string name="product_img_content_description">Product Image</string>
     <string name="currency_symbol">$ </string>
     <string name="adaptor_instance">adaptor_instance</string>
     <string name="product_id">product_id</string>
@@ -53,5 +54,18 @@
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
         functionality.</string>
     <string name="settings">Settings</string>
+    <string name="local_db_name">products-favorite</string>
+    <string name="id">id</string>
+    <string name="name">name</string>
+    <string name="address">address</string>
+    <string name="price">price</string>
+    <string name="favorite">favorite</string>
+    <string name="default_product_local_db_id">default</string>
+    <string name="is_product_fav_broadcast_action">is_product_fav_broadcast_action</string>
+    <string name="total_fav">is_fav</string>
+    <string name="total_fav_label_prefix">You have </string>
+    <string name="total_fav_label_suffix"> favorite products from MyLocalShop ! </string>
+    <string name="your_fav">You Favorite this !</string>
+    <string name="empty_view_text">Not able to retrieve data !</string>
 
 </resources>

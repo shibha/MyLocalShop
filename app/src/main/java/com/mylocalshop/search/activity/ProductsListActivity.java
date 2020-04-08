@@ -1,6 +1,9 @@
 package com.mylocalshop.search.activity;
 
 import android.Manifest;
+import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,13 +24,16 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,7 +45,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.mylocalshop.R;
 import com.mylocalshop.post.dao.Product;
 import com.mylocalshop.post.service.ImageUploadService;
-import com.mylocalshop.search.model.ProductContent;
+import com.mylocalshop.search.factory.ViewModelFactory;
+import com.mylocalshop.search.view.model.ProductContent;
+import com.mylocalshop.search.view.model.ProductsViewModel;
+import com.mylocalshop.widget.TotalProductsOnShopWidgetProvider;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,6 +72,8 @@ public class ProductsListActivity extends AppCompatActivity {
     private FrameLayout productListContainerLayout;
     private FirebaseAuth mAuth;
     private Uri photoURI;
+    private ProductsListActivity contextActivity;
+    public List<Product> localFavProducts;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -97,8 +109,21 @@ public class ProductsListActivity extends AppCompatActivity {
         if (findViewById(R.id.item_detail_container) != null) {
             mTwoPane = true;
         }
-        new LoadFirebaseData().execute();
+        contextActivity = this;
 
+        ViewModelFactory viewModelFactoryInstance = new ViewModelFactory(this.getApplication());
+        ProductsViewModel viewModel =
+                ViewModelProviders.of(this, viewModelFactoryInstance).get(ProductsViewModel.class);
+
+
+        viewModel.getFavProducts().observe(this, new Observer<List<Product>>() {
+            @Override
+            public void onChanged(@Nullable List<Product> favProducts) {
+                contextActivity.localFavProducts = favProducts;
+            }
+        });
+
+        new LoadFirebaseData().execute();
         SearchView searchView = findViewById(R.id.simpleSearchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
             @Override
@@ -118,7 +143,25 @@ public class ProductsListActivity extends AppCompatActivity {
 
         mProgressBarDialog.setVisibility(View.VISIBLE);
         productListContainerLayout.setVisibility(View.INVISIBLE);
+
+        AppWidgetManager appWidgetManager =
+                getApplicationContext().getSystemService(AppWidgetManager.class);
+        ComponentName myProvider =
+                new ComponentName(getApplicationContext(), TotalProductsOnShopWidgetProvider.class);
+
+
+
+        if (appWidgetManager.isRequestPinAppWidgetSupported()) {
+            Intent pinnedWidgetCallbackIntent = new Intent();
+
+            PendingIntent successCallback = PendingIntent.getBroadcast(getApplicationContext(), 0,
+                    pinnedWidgetCallbackIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            appWidgetManager.requestPinAppWidget(myProvider, null, successCallback);
+        }
     }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle out) {
@@ -164,14 +207,13 @@ public class ProductsListActivity extends AppCompatActivity {
             if (grantResults.length <= 0) {
                 Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-
                 startService(new Intent(this, ImageUploadService.class)
                         .putExtra(getString(R.string.file_uri), photoURI)
                         .setAction(getString(R.string.action_upload)));
             }
         }
     }
+
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -200,8 +242,6 @@ public class ProductsListActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
 
     private void startCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -280,12 +320,14 @@ public class ProductsListActivity extends AppCompatActivity {
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference dbReference = database.getReference();
             DatabaseReference ref = dbReference.child(getString(R.string.imgSaveFolderName));
-
             ref.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                     Product newProduct = dataSnapshot.getValue(Product.class);
                     if(ProductContent.PRODUCT_MAP.get(prevChildKey) == null){
+                        boolean isLocallyFav = checkIfFavorite(prevChildKey);
+                        newProduct.setId(prevChildKey);
+                        newProduct.setFavorite(isLocallyFav);
                         ProductContent.addItem(convertToViewModel(newProduct, prevChildKey));
                     }
                     setUpRecycleView();
@@ -309,9 +351,24 @@ public class ProductsListActivity extends AppCompatActivity {
 
                 private ProductContent.ProductItem convertToViewModel(Product product, String prevProductId) {
                     ProductContent.ProductItem item = new ProductContent.ProductItem(prevProductId, product.getName() ,
-                            String.valueOf(product.getPrice()), product.getImageUri(), product.getAddress());
+                            String.valueOf(product.getPrice()), product.getImageUri(), product.getAddress(),
+                            product.isFavorite());
                     return item;
 
+                }
+
+                private boolean  checkIfFavorite(String localDbPrimaryKey){
+
+                    if(contextActivity.localFavProducts == null || contextActivity.localFavProducts.size() == 0){
+                        return false;
+                    }
+
+                    for(Product currentProduct : contextActivity.localFavProducts){
+                        if(currentProduct.getId().equals(localDbPrimaryKey)){
+                            return true;
+                        }
+                    }
+                    return false;
                 }
             });
             return 0;
@@ -431,7 +488,9 @@ public class ProductsListActivity extends AppCompatActivity {
         private final ProductsListActivity mParentActivity;
         private List<ProductContent.ProductItem> mValues;
         private List<ProductContent.ProductItem> masterSet;
+
         private final boolean mTwoPane;
+
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -454,9 +513,10 @@ public class ProductsListActivity extends AppCompatActivity {
             }
         };
 
+
         SimpleItemRecyclerViewAdapter(ProductsListActivity parent,
                                       List<ProductContent.ProductItem> items,
-                                      boolean twoPane) {
+                                      boolean twoPane ) {
             mValues = items;
             masterSet = items;
             mParentActivity = parent;
@@ -473,8 +533,9 @@ public class ProductsListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             ProductContent.ProductItem currentProduct = mValues.get(position);
+
             holder.mIdView.setText(currentProduct.name);
-            holder.mContentView.setText(mParentActivity.getString(R.string.currency_symbol) + currentProduct.price);
+            holder.mPrice.setText(mParentActivity.getString(R.string.currency_symbol) + currentProduct.price);
             String uri = currentProduct.imgUri;
 
             ViewGroup.LayoutParams imgLayoutParams = holder.productImg.getLayoutParams();
@@ -484,6 +545,12 @@ public class ProductsListActivity extends AppCompatActivity {
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
+            if(currentProduct.favorite){
+                holder.isFavIcon.setImageDrawable(ContextCompat.getDrawable(
+                        mParentActivity.getApplicationContext(), android.R.drawable.btn_star_big_on));
+            }else{
+                holder.isFavIcon.setVisibility(View.INVISIBLE);
+            }
         }
 
         @Override
@@ -493,14 +560,16 @@ public class ProductsListActivity extends AppCompatActivity {
 
         class ViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
-            final TextView mContentView;
+            final TextView mPrice;
             final ImageView productImg;
+            final ImageView isFavIcon;
 
             ViewHolder(View view) {
                 super(view);
                 mIdView = view.findViewById(R.id.name);
-                mContentView = view.findViewById(R.id.price);
+                mPrice = view.findViewById(R.id.price);
                 productImg = view.findViewById(R.id.img);
+                isFavIcon = view.findViewById(R.id.isFavIcon);
             }
         }
     }

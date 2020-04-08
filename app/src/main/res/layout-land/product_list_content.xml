@@ -13,6 +13,7 @@
 
         <ImageView
             android:id="@+id/img"
+            android:contentDescription="TODO"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/text_margin" />

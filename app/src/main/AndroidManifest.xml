@@ -2,15 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mylocalshop">
-
     <uses-feature android:name="android.hardware.camera" />
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,6 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".widget.activity.TotalProductsDisplayActivity"></activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.mylocalshop.fileprovider"
@@ -29,12 +28,14 @@
                 android:resource="@xml/file_paths"
                 tools:replace="android:resource" />
         </provider>
-
-        <meta-data
-            android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="ocr">
-        </meta-data>
-
+        <receiver android:name=".widget.TotalProductsOnShopWidgetProvider"
+            android:label="Fav MyLocalShop Product Widget">
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info"></meta-data>
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".search.activity.ProductsListActivity"
             android:label="@string/title_item_list"
@@ -47,25 +48,28 @@
         </activity>
         <activity
             android:name=".search.activity.ProductDetailActivity"
-            android:label="@string/title_item_detail"
+            android:label="@string/title_product_detail"
             android:parentActivityName=".search.activity.ProductsListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mylocalshop.search.activity.ProductsListActivity">
-            </meta-data>
+                android:value="com.mylocalshop.search.activity.ProductsListActivity"></meta-data>
         </activity>
-        <activity android:name=".post.activity.PostProductActivity">
-        </activity>
+        <activity android:name=".post.activity.PostProductActivity"></activity>
 
         <service
             android:name=".post.service.FetchAddressIntentService"
-            android:exported="false">
-        </service>
+            android:exported="false"></service>
         <service
             android:name=".post.service.ImageUploadService"
-            android:exported="false">
-        </service>
+            android:exported="false"></service>
+        <service
+            android:name=".common.database.service.MarkProductFavoriteService"
+            android:exported="false"></service>
+        <service
+            android:name=".common.database.service.GetTotalFavoriteProductsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false" />
     </application>
 
 </manifest>
