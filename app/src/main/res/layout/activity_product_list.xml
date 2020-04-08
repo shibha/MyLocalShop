@@ -8,10 +8,21 @@
     android:fitsSystemWindows="true"
     tools:context=".search.activity.ProductsListActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/search_products_title"
+        app:titleTextColor="@android:color/white"
+        android:background="?attr/colorPrimary">
+    </androidx.appcompat.widget.Toolbar>
+
     <SearchView
         android:id="@+id/simpleSearchView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/search_bar_height"
+        android:layout_marginTop="@dimen/search_bar_height"
         android:iconifiedByDefault="false">
     </SearchView>
 

@@ -7,11 +7,21 @@
     android:fitsSystemWindows="true"
     tools:context=".search.activity.ProductDetailActivity"
     tools:ignore="MergeRootFrame">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/product_detail_title"
+        app:titleTextColor="@android:color/white"
+        android:background="?attr/colorPrimary">
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/item_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/search_bar_height"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 

@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">MyLocalShop</string>
+    <string name="search_products_title">MyLocalShop</string>
+    <string name="post_product_title">MyLocalShop</string>
+    <string name="product_detail_title">MyLocalShop</string>
     <string name="name_label">Name</string>
     <string name="loc_label">Address</string>
     <string name="tag_label">Tags</string>
